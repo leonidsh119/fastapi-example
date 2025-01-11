@@ -2,7 +2,7 @@ import aio_pika
 from app.core.settings import settings
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 RABBITMQ_URL = f"amqp://{settings.RABBITMQ_USER}:{settings.RABBITMQ_PASSWORD}@{settings.RABBITMQ_HOST}:{settings.RABBITMQ_PORT}/{settings.RABBITMQ_VHOST}"
 
@@ -15,4 +15,4 @@ async def send_message(message: str):
             aio_pika.Message(body=message.encode()),
             routing_key=settings.RABBITMQ_PUBLISHER_QUEUE
         )
-        print(f"Sent message: {message}")
+        logger.info(f"Sent message: {message}")
