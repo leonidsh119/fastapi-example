@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app.routers import health
 from app.routers import items
+from app.routers import notification
 
 import asyncio
 from app.rabbitmq.listener import start_rabbitmq_listener
@@ -16,6 +17,7 @@ app = FastAPI(
 
 app.include_router(health.router, prefix="/health", tags=["health"])
 app.include_router(items.router, prefix="/items", tags=["items"])
+app.include_router(notification.router, prefix="/notification", tags=["notification"])
 
 @app.on_event("startup")
 async def startup_event():

@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     RABBITMQ_PASSWORD: str = "guest"
     RABBITMQ_VHOST: str = "/"
     RABBITMQ_SUBSCRIBER_QUEUE: str = "example-queue-in"
+    RABBITMQ_PUBLISHER_QUEUE: str = "example-queue-out"
 
     class Config:
         env_file = ".env"

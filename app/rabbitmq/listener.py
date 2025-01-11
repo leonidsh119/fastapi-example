@@ -18,7 +18,7 @@ async def start_rabbitmq_listener():
     logger.info(f"Connected to RabbitMQ: {RABBITMQ_URL}")
     async with connection:
         channel = await connection.channel()
-        queue = await channel.declare_queue("settings.RABBITMQ_SUBSCRIBER_QUEUE", durable=True)
+        queue = await channel.declare_queue(settings.RABBITMQ_SUBSCRIBER_QUEUE, durable=True)
         logger.info(f"Listening on : {settings.RABBITMQ_SUBSCRIBER_QUEUE}")
 
         logger.info("Waiting for messages in the queue...")
