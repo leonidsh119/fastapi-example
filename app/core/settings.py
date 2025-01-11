@@ -9,6 +9,13 @@ class Settings(BaseSettings):
     APP_PORT: int = 8000
     DEBUG: bool = False
 
+    RABBITMQ_HOST: str = "localhost"
+    RABBITMQ_PORT: int = 5672
+    RABBITMQ_USER: str = "guest"
+    RABBITMQ_PASSWORD: str = "guest"
+    RABBITMQ_VHOST: str = "/"
+    RABBITMQ_SUBSCRIBER_QUEUE: str = "example-queue-in"
+
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
