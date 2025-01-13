@@ -35,3 +35,8 @@ docker run -d --name rabbit-mq -p 5672:5672 -p 15672:15672 rabbitmq:management
 ````
 docker-compose up
 ````
+
+## Test
+when the containers are up and running together:
+- Test the application REST API on  http://127.0.0.1:8000/docs
+- Publish messages on RabbitMQ: http://localhost:15672/ (login with default credentials: guest/guest)
