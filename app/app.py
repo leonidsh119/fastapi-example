@@ -1,14 +1,14 @@
+import asyncio
+import logging
+from logging import config
 from fastapi import FastAPI
 from app.routers import health
 from app.routers import items
 from app.routers import notification
-
-import asyncio
 from app.rabbitmq.listener import start_rabbitmq_listener
 from app.core.settings import settings
-from app.logging_config import setup_logging
 
-logger = setup_logging()
+config.fileConfig("logging.conf")
 
 app = FastAPI(
     title="My FastAPI Project",
@@ -26,8 +26,8 @@ app.include_router(notification.router, prefix="/notification", tags=["notificat
 async def startup_event():
     # Start the RabbitMQ listener in the background
     asyncio.create_task(start_rabbitmq_listener())
-    logger.info(f"FastAPI application started. Listening on RabbitMQ at {settings.RABBITMQ_HOST}:{settings.RABBITMQ_PORT}.")
+    logging.info(f"FastAPI application started. Listening on RabbitMQ at {settings.RABBITMQ_HOST}:{settings.RABBITMQ_PORT}.")
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    logger.info("FastAPI application shutting down...")
+    logging.info("FastAPI application shutting down...")
