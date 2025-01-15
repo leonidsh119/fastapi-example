@@ -1,12 +1,13 @@
 from fastapi import APIRouter
 from app.services import health
+from app.models.health import Healthcheck
 
 router = APIRouter()
 
-@router.get("/")
+@router.get("/", response_model=Healthcheck)
 async def health_check():
-    status = health.get_health_status()
-    if status["status"] == "healthy":
-        return status
+    healthcheck = health.get_health_status()
+    if healthcheck.status == "Healthy":
+        return healthcheck
     else:
-        return status, 503
+        return healthcheck, 503

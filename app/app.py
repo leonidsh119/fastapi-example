@@ -7,8 +7,9 @@ from app.routers import items
 from app.routers import notification
 from app.rabbitmq.listener import start_rabbitmq_listener
 from app.core.settings import settings
+from pathlib import Path
 
-config.fileConfig("logging.conf")
+config.fileConfig(fname=Path(__file__).resolve().parent.parent / "logging.conf")
 
 app = FastAPI(
     title="My FastAPI Project",
