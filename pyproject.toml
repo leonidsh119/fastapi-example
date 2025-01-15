@@ -5,7 +5,7 @@ description = "Example Service based on FastAPI"
 authors = [
     {name = "Leonid Shepetovsky", email = "leonid.shepetovsky@gmail.com"}
 ]
-license = {text = "MIT"}
+license = {text = "All Rights Reserved"}
 readme = "README.md"
 requires-python = ">=3.13,<4.0"
 dependencies = [
