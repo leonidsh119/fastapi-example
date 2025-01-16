@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 # Pydantic model for the item (Create and Update)
 class HealthcheckBase(BaseModel):
@@ -8,5 +8,6 @@ class HealthcheckBase(BaseModel):
 # Pydantic model for item response (including id)
 class Healthcheck(HealthcheckBase):
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(
+        from_attributes=True
+    )

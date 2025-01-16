@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -17,8 +17,9 @@ class Settings(BaseSettings):
     RABBITMQ_SUBSCRIBER_QUEUE: str = "example-queue-in"
     RABBITMQ_PUBLISHER_QUEUE: str = "example-queue-out"
 
-    class Config:
-        env_file = ".env"
+    model_config = SettingsConfigDict(
+        env_file = ".env",
         env_file_encoding = "utf-8"
+    )
 
 settings = Settings()
