@@ -14,7 +14,7 @@ requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 
-[tool.poetry.group.dev.dependencies]
+[tool.poetry.dependencies]
 python = ">=3.13,<4.0"
 fastapi = ">=0.115.6,<0.116.0"
 uvicorn = ">=0.34.0,<0.35.0"
