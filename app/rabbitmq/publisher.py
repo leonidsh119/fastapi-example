@@ -1,16 +1,22 @@
 import aio_pika
-from app.core.settings import settings
 import logging
 
-RABBITMQ_URL = f"amqp://{settings.RABBITMQ_USER}:{settings.RABBITMQ_PASSWORD}@{settings.RABBITMQ_HOST}:{settings.RABBITMQ_PORT}/{settings.RABBITMQ_VHOST}"
 
-async def send_message(message: str):
-    connection = await aio_pika.connect_robust(RABBITMQ_URL)
-    async with connection:
-        channel = await connection.channel()
-        await channel.declare_queue(settings.RABBITMQ_PUBLISHER_QUEUE, durable=True)
-        await channel.default_exchange.publish(
-            aio_pika.Message(body=message.encode()),
-            routing_key=settings.RABBITMQ_PUBLISHER_QUEUE
-        )
-        logging.info(f"Sent message: {message}")
+class Publisher:
+    def __init__(self, connection_url: str, queue_name: str):
+        self.connection_url = connection_url
+        self.queue_name = queue_name
+
+
+    async def publish(self, message: str):
+        connection = await aio_pika.connect_robust(self.connection_url)
+        async with connection:
+            channel = await connection.channel()
+            await channel.declare_queue(self.queue_name, durable=True)
+            await channel.default_exchange.publish(
+                aio_pika.Message(body=message.encode()),
+                routing_key=self.queue_name
+            )
+            logging.info(f"Sent message: {message}")
+
+
