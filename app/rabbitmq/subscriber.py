@@ -14,9 +14,8 @@ class Subscriber:
             logging.error(f"Can't subscribe on RabbitMQ - not connected.")
             return
         try:
-            logging.info(f"Declaring queue: [{queue_name}] ...")
-            queue = await self.connection.declare_queue(queue_name)
-            logging.info(f"Waiting for messages in the queue [{queue_name}] ...")
+            logging.info(f"Subscribing for messages in queue [{queue_name}] ...")
+            queue = await self.connection.get_channel().declare_queue(queue_name, durable=True)
             await queue.consume(self.on_message)
             await asyncio.Future()
         except aio_pika.exceptions.AMQPError as e:

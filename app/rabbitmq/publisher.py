@@ -12,10 +12,9 @@ class Publisher:
             logging.error(f"Can't publish to RabbitMQ - not connected.")
             return
         try:
-            logging.info(f"Declaring queue: [{queue_name}] ...")
-            await self.connection.declare_queue(queue_name)
-            logging.info(f"Sending message: [{message}] ...")
-            await self.connection.get_default_exchange().publish(
+            logging.info(f"Sending message: [{message}] to queue [{queue_name}] ...")
+            await self.connection.get_channel().declare_queue(queue_name, durable=True)
+            await self.connection.get_channel().default_exchange.publish(
                 aio_pika.Message(body=message.encode()),
                 routing_key=queue_name
             )
