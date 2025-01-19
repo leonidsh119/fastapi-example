@@ -1,6 +1,9 @@
+from app.rabbitmq.connection import Connection
 from app.rabbitmq.publisher import Publisher
 from app.rabbitmq.subscriber import Subscriber
 
-publisher = Publisher()
+rabbitmq_connection = Connection()
 
-subscriber = Subscriber()
+publisher = Publisher(rabbitmq_connection)
+
+subscriber = Subscriber(rabbitmq_connection)

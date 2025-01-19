@@ -1,52 +1,21 @@
 import asyncio
 import aio_pika
 import logging
-from aio_pika.abc import AbstractRobustConnection, AbstractRobustChannel, AbstractIncomingMessage, NoneType
+from aio_pika.abc import AbstractIncomingMessage
+from app.rabbitmq.connection import Connection
 
 
 class Subscriber:
-    def __init__(self):
-        self.connection: AbstractRobustConnection = NoneType
-        self.channel: AbstractRobustChannel = NoneType
-        self.connected: bool = False
-
-    async def connect(self, user: str, password: str, host: str, port: str, vhost: str):
-        if self.connected:
-            logging.warning(f"Already connected.")
-            return
-        try:
-            connection_url = f"amqp://{user}:{password}@{host}:{port}/{vhost}"
-            logging.info(f"Connecting to RabbitMQ: {connection_url} ...")
-            self.connection = await aio_pika.connect_robust(connection_url)
-            logging.info(f"Connected to RabbitMQ: {connection_url}")
-            self.channel = await self.connection.channel()
-            self.connected = True
-        except aio_pika.exceptions.AMQPConnectionError as e:
-            logging.error(f"Connection failed: {e}.")
-            self.connected = False
-
-    async def disconnect(self):
-        if not self.connected:
-            logging.warning(f"Already disconnected.")
-            return
-        try:
-            logging.info(f"Disconnecting from RabbitMQ ...")
-            await self.channel.close()
-            await self.connection.close()
-            logging.info(f"Disconnected from RabbitMQ.")
-            self.channel = NoneType
-            self.connection = NoneType
-            self.connected = False
-        except aio_pika.exceptions.AMQPConnectionError as e:
-            logging.error(f"Failed to disconnect from RabbitMQ: {e}.")
+    def __init__(self, connection: Connection):
+        self.connection: Connection = connection
 
     async def subscribe(self, queue_name: str):
-        if not self.connected:
+        if not self.connection.is_connected():
             logging.error(f"Can't subscribe on RabbitMQ - not connected.")
             return
         try:
             logging.info(f"Declaring queue: [{queue_name}] ...")
-            queue = await self.channel.declare_queue(queue_name, durable=True)
+            queue = await self.connection.declare_queue(queue_name)
             logging.info(f"Waiting for messages in the queue [{queue_name}] ...")
             await queue.consume(self.on_message)
             await asyncio.Future()
