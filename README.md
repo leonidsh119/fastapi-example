@@ -40,3 +40,7 @@ docker-compose up
 when the containers are up and running together:
 - Test the application REST API on  http://127.0.0.1:8000/docs
 - Publish messages on RabbitMQ: http://localhost:15672/ (login with default credentials: guest/guest)
+- The automated testing is implemented using PyTest. The tests are testing REST endpoints and mocking the connection to RabbitMQ. Run the tests by:
+````
+poetry run pytest
+````
