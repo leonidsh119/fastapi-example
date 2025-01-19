@@ -5,14 +5,11 @@ from fastapi import FastAPI
 from pathlib import Path
 from contextlib import asynccontextmanager
 
-from app.rabbitmq.publisher import Publisher
 from app.routers import health
 from app.routers import items
 from app.routers import notification
-from app.rabbitmq.listener import start_rabbitmq_listener
 from app.core.settings import settings
-from app.core.dependencies import publisher
-
+from app.core.dependencies import publisher, subscriber
 
 config.fileConfig(fname=Path(__file__).resolve().parent.parent / "logging.conf")
 
@@ -30,8 +27,11 @@ async def lifespan(app: FastAPI):
     # Shutdown event - runs when the app shuts down
     logging.info("FastAPI application is shutting down.")
     asyncio.create_task(publisher.disconnect())
-    # await stop_rabbitmq_listener()
+    asyncio.create_task(subscriber.disconnect())
 
+async def start_rabbitmq_listener():
+    await subscriber.connect(settings.RABBITMQ_USER, settings.RABBITMQ_PASSWORD, settings.RABBITMQ_HOST, settings.RABBITMQ_PORT, settings.RABBITMQ_VHOST)
+    await subscriber.subscribe(settings.RABBITMQ_SUBSCRIBER_QUEUE)
 
 app = FastAPI(
     title="My FastAPI Project",
