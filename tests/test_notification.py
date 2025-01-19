@@ -9,4 +9,4 @@ def test_publish_message(mocker):
     response_json = response.json()
     assert response_json['status'] == "Message sent"
     assert response_json['message'] == message
-    mock_publish.assert_called_once_with(message)
+    mock_publish.assert_called_once_with(message, 'example-queue-out')
